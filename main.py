@@ -153,7 +153,6 @@ with page4:
 
 
     # section output
-    st.subheader("Hasil Predict Score")
     def submit():
         # cek input 
         # scaler = MinMaxScaler()
