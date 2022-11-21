@@ -16,7 +16,7 @@ page1, page2, page3, page4, page5 = st.tabs(["Home", "Data", "Preprocessing", "I
 
 with page1:
     st.title("Klasifikasi Kredit Score Menggunakan Metode Naive Bayes Gaussian")
-    st.write("Dataset Yang digunakan adalah **Kredit Score** dari Github: [https://github.com/masaul/data-csv/blob/main/credit_score.csv](https://github.com/masaul/data-csv/blob/main/credit_score.csv")
+    st.write("Dataset Yang digunakan adalah **Kredit Score** dari Github: https://github.com/masaul/data-csv/blob/main/credit_score.csv
     st.write("Link repository Github : [https://github.com/masaul/web-streamlit.git](https://github.com/masaul/web-streamlit.git) ")
     st.header("Deskripsi Data")
     st.write("Dataset yang digunakan memiliki 7 kolom dan juga memiliki type yang berbeda-beda. Untuk detail fitur ada di bawah ini:")
