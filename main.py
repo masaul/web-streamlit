@@ -12,43 +12,66 @@ from sklearn.model_selection import train_test_split
 from sklearn import model_selection
 import pickle
 
+st.sidebar.title("Selamat Datang!")
+st.sidebar.write("Di website prediksi risk rating pada dataset kredit score menggunakan metode Naive Bayes Gaussian.")
+
+
 page1, page2, page3, page4, page5 = st.tabs(["Home", "Data", "Preprocessing", "Input Model", "Prediksi"])
 
 with page1:
     st.title("Klasifikasi Kredit Score Menggunakan Metode Naive Bayes Gaussian")
-    st.write("Dataset Yang digunakan adalah **Kredit Score** dari Github: https://github.com/masaul/data-csv/blob/main/credit_score.csv")
+    st.write("Dataset Yang digunakan adalah **Kredit Score** dari [Github Saya](https://raw.githubusercontent.com/masaul/data-csv/main/credit_score)")
     st.write("Link repository Github : [https://github.com/masaul/web-streamlit.git](https://github.com/masaul/web-streamlit.git) ")
     st.header("Deskripsi Data")
-    st.write("Dataset yang digunakan memiliki 7 kolom dan juga memiliki type yang berbeda-beda. Untuk detail fitur ada di bawah ini:")
+    st.write("Dataset yang digunakan adalah dataset untuk mengukur resiko dari peminjaman yang memiliki kolom kelas dengan nama risk_rating nilai nya dari 1 - 4. 1 memiliki resiko yang rendah, 2 memiliki resiko yang sedang, 3 memiliki resiko yang tidak terlalu tinggi, dan 4 memiliki resiko tinggi. data ini juga memiliki 7 kolom dan juga memiliki type yang berbeda-beda. Untuk detail fitur ada di bawah ini:")
     st.markdown("""
         <ul>
             <li>
                 Kolom 1: kode_kontrak
-                <p> Kolom kode_kontrak merupakan identitas dari sebuah data. identitas data tidak perlu diikutkan untuk klasifikasi. Sehingga kolom ini akan diabaikan saat klasifikasi data. </p>
+                <p> 
+                    Kolom kode_kontrak merupakan identitas dari sebuah data. identitas data tidak perlu diikutkan untuk klasifikasi. Sehingga kolom ini akan diabaikan saat klasifikasi data. 
+                    Pada kolom ini merupakan kolom identitas pada nasabah yang menjadi pelanggan.
+                </p>
             </li>
             <li>
                 Kolom 2: pendapatan_setahun_juta
-                <p> Kolom pendapatan_setahun_juta merupakan data yang bertype numerik. </p>
+                <p> 
+                    Kolom pendapatan_setahun_juta merupakan data yang bertype numerik. Ciri-ciri data bertype numerik adalah data tersebut bernilai angka dan bertype integer.
+                    Pada kolom ini merupakan kolom pendapatan nasabah pada satu tahun dan memiliki satuan juta.
+                </p>
             </li>
             <li>
                 Kolom 3: kpr_aktif
-                <p> Kolom kpr_aktif merupakan data bertype categorial sehingga harus di normalisasikan agar berubah menjadi numerik. </p>
+                <p> 
+                    Kolom kpr_aktif merupakan data bertype categorial/oridinal sehingga harus di normalisasikan agar berubah menjadi numerik. Ciri-ciri data bertype categorial yaitu data tersebut merupakan nama dari suatu hal, dan ciri data bertype ordinal yaitu memiliki 2 keadaan.
+                    Pada kolom ini merupakan kolom kredit pemilik rumah yang dimiliki nasabah. jika nasabah tersebut mempunyai KPR aktif, maka data tersebut bernilai "Ya", begitu juga sebaliknya.
+                </p>
             </li>
             <li>
                 Kolom 4: durasi_pinjaman_bulan
-                <p> Kolom durasi_pinjaman_bulan data bertype numerik. </p>
+                <p> 
+                    Kolom durasi_pinjaman_bulan data bertype numerik. Ciri-ciri data bertype numerik adalah data tersebut bernilai angka dan bertype integer.
+                    Pada kolom ini merupakan kolom durasi pinjaman yang akan diajukan oleh nasabah dalam satuan bulan.
+                </p>
             </li>
             <li>
                 Kolom 5: jumlah_tanggungan
-                <p> Kolom jumlah_tanggungan merupakan data bertype numerik </p>
+                <p> 
+                    Kolom jumlah_tanggungan merupakan data bertype numerik. Ciri-ciri data bertype numerik adalah data tersebut bernilai angka dan bertype integer.
+                    Pada kolom ini merupakan jumlah tanggungan yang dimiliki nasaban saat dirumah.
+                </p>
             </li>
             <li>
                 Kolom 6: rata_rata_overdue
-                <p> Kolom rata_rata_overdue merupakan data bertype categorial sehingga harus di normalisasikan agar berubah menjadi numerik </p>
+                <p> Kolom rata_rata_overdue merupakan data bertype categorial sehingga harus di normalisasikan agar berubah menjadi numerik. Ciri-ciri data bertype categorial yaitu data tersebut merupakan nama dari suatu hal,
+                    Pada kolom ini merupakan kolom jangka pengembalian yang dipinjam oleh nasabah dalam waktu rentang yang sudah disediakan.
+                </p>
             </li>
             <li>
                 Kolom 7: risk_rating
-                <p> Kolom risk_rating merupakan class dengan type data numerik. </p>
+                <p> Kolom risk_rating merupakan class dengan type data numerik. Ciri-ciri data bertype numerik adalah data tersebut bernilai angka dan bertype integer
+                    Kolom ini merupakan kelas dari data. dan yang akan di prediksi nanti merupakan data yang ada pada kolom ini.
+                </p>
             </li>
         </ul>
     """, unsafe_allow_html=True)
@@ -203,13 +226,13 @@ with page4:
         # joblib.dump(naive_bayes_classifier, filename)
 
         model = joblib.load("model.joblib")
+
+        # predAkurasi = model.score()
         # with open("model.sav", "rb") as model_buffer:
             # model = pickle.load(model_buffer)
         pred = model.predict(inputs)
-
+        # returnData = [pred, predAkurasi]
         return pred
-        
-
 
     # create button submit
     submitted = st.button("Prediksi")
@@ -218,6 +241,9 @@ with page4:
         with page5:
             st.write("Hasil prediksi risk rating yang di peroleh yaitu:")
             st.text(submit())
+            # st.write("akurasi data uji")
+            # predAkurasi = submit()[1].score()
+            # st.text(predAkurasi)
 
 with page5:
     if not submitted:
