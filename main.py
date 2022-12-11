@@ -12,18 +12,19 @@ from sklearn.model_selection import train_test_split
 from sklearn import model_selection
 import pickle
 
-st.sidebar.title("Selamat Datang!")
-st.sidebar.write("Di website prediksi risk rating pada dataset kredit score menggunakan metode Naive Bayes Gaussian.")
+st.title("Selamat Datang di Website Data Mining!")
+
+# st.write("Di website prediksi risk rating pada dataset kredit score menggunakan metode Naive Bayes Gaussian.")
 
 
-page1, page2, page3, page4, page5 = st.tabs(["Home", "Data", "Preprocessing", "Input Model", "Prediksi"])
+page1, page2, page3, page4= st.tabs(["Home", "Data", "Preprocessing", "Input Model"])
 
 with page1:
-    st.title("Klasifikasi Kredit Score Menggunakan Metode Naive Bayes Gaussian")
+    st.header("Klasifikasi Kredit Score Menggunakan Metode Naive Bayes Gaussian")
     st.write("Dataset Yang digunakan adalah **Kredit Score** dari [Github Saya](https://raw.githubusercontent.com/masaul/data-csv/main/credit_score)")
     st.write("Link repository Github : [https://github.com/masaul/web-streamlit.git](https://github.com/masaul/web-streamlit.git) ")
     st.header("Deskripsi Data")
-    st.write("Dataset yang digunakan adalah dataset untuk mengukur resiko dari peminjaman yang memiliki kolom kelas dengan nama risk_rating nilai nya dari 1 - 4. 1 memiliki resiko yang rendah, 2 memiliki resiko yang sedang, 3 memiliki resiko yang tidak terlalu tinggi, dan 4 memiliki resiko tinggi. data ini juga memiliki 7 kolom dan juga memiliki type yang berbeda-beda. Untuk detail fitur ada di bawah ini:")
+    st.write("Dataset yang digunakan adalah dataset untuk mengukur resiko dari peminjaman. dataset ini memiliki kolom kelas dengan nama risk_rating nilai nya dari 1 - 4. 1 memiliki resiko yang rendah, 2 memiliki resiko yang sedang, 3 memiliki resiko yang tidak terlalu tinggi, dan 4 memiliki resiko tinggi. data ini juga memiliki 7 kolom dan juga memiliki type yang berbeda-beda. Untuk detail fitur ada di bawah ini:")
     st.markdown("""
         <ul>
             <li>
@@ -77,13 +78,13 @@ with page1:
     """, unsafe_allow_html=True)
 
 with page2:
-    st.title("Dataset Kredit Score")
+    st.header("Dataset Kredit Score")
     data = pd.read_csv("https://raw.githubusercontent.com/masaul/data-csv/main/credit_score.csv")
     deleteCol = data.drop(["Unnamed: 0"], axis=1)
     st.write(deleteCol)
 
 with page3:
-    st.title("Halaman PreProcessing")
+    st.header("Halaman PreProcessing")
     st.write("Preprocessing data merupakan tahapan untuk melakukan mining data sebelum tahap pemrosesan. fungsi preprocessing data untuk mengubah data mentah menjadi data yang mudah dipahami.")
     st.markdown("""
         <ol>
@@ -111,18 +112,13 @@ with page3:
 
 
     dataCreditScore_withoutColumns= pd.DataFrame(creditScoreRaw, columns=['kode_kontrak','pendapatan_setahun_juta','durasi_pinjaman_bulan','jumlah_tanggungan','risk_rating'])
-    # fiturWithout = pd.DataFrame = pd.DataFrame(fitur, columns=['Pendapatan Setahun (Juta)', 'Jumlah Tanggungan', 'Durasi Pinjaman (Bulan)'])
 
     # Encode Data menjadi numerik
     encodeAvarage = pd.get_dummies(creditScoreRaw['rata_rata_overdue'])
     encodeKprAktif=pd.get_dummies(creditScoreRaw['kpr_aktif'])
 
-    # encodeFiturAvarage = pd.get_dummies(fitur['Rata-rata     Overdue'])
-    # encodeFiturKpr = pd.get_dummies(fitur['KPR Aktif'])
-
     # Menggabungkan data yang sudah di encode
     concatCreditScoreRaw = pd.concat([dataCreditScore_withoutColumns, encodeKprAktif, encodeAvarage], axis=1)
-    # concatFitur = pd.concat([fiturWithout, encodeFiturAvarage, encodeFiturKpr])
 
 
     dataframeRiskRating = pd.DataFrame(creditScoreRaw, columns=['risk_rating'])
@@ -168,10 +164,10 @@ with page4:
 
 
     # membuat input
-    pendapatan_setahun = st.text_input("Pendapatan Setahun(juta)")
+    pendapatan_setahun_juta = st.text_input("Pendapatan Setahun(juta)")
     kpr = st.radio("KPR", ("aktif", "tidak aktif"))
     jumlah_tanggungan = st.text_input("Jumlah Tanggungan")
-    durasi_pinjaman = st.selectbox("Durasi (bulan)", ("12", "24", "36", "48"))
+    durasi_pinjaman_bulan = st.selectbox("Durasi (bulan)", ("12", "24", "36", "48"))
     overdue = st.selectbox("Overdue", ("0 - 30 days", "31 - 45 days", "46 - 60 days", "61 - 90 days", "> 90 days"))
 
 
@@ -185,7 +181,7 @@ with page4:
         # joblib.dump(scaler, open(filename, 'wb'))
 
         scaler = joblib.load("scaler.save")
-        normalize = scaler.transform([[int(pendapatan_setahun),int(durasi_pinjaman), int(jumlah_tanggungan)]])[0].tolist()
+        normalize = scaler.transform([[int(pendapatan_setahun_juta),int(durasi_pinjaman_bulan), int(jumlah_tanggungan)]])[0].tolist()
 
         kpr_ya = 0
         kpr_tidak = 0
@@ -225,29 +221,16 @@ with page4:
         # filenameModel = "model.joblib"
         # joblib.dump(naive_bayes_classifier, filename)
 
+
         model = joblib.load("model.joblib")
 
-        # predAkurasi = model.score()
-        # with open("model.sav", "rb") as model_buffer:
-            # model = pickle.load(model_buffer)
         pred = model.predict(inputs)
-        # returnData = [pred, predAkurasi]
         return pred
 
     # create button submit
     submitted = st.button("Prediksi")
     if submitted:
-        st.text("Hasil prediksi ada pada halaman Prediksi")
-        with page5:
-            st.write("Hasil prediksi risk rating yang di peroleh yaitu:")
-            st.text(submit())
-            # st.write("akurasi data uji")
-            # predAkurasi = submit()[1].score()
-            # st.text(predAkurasi)
-
-with page5:
-    if not submitted:
-        st.write("Belum ada prediksi, Harap masukkan input model dahulu!")
-
+        st.write("Hasil prediksi risk rating yang di peroleh yaitu:")
+        st.text(submit())
 
 
